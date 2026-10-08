@@ -1,0 +1,36 @@
+{
+  "name": "@canteen/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@canteen/contracts": "workspace:*",
+    "@canteen/ui": "workspace:*",
+    "@canteen/utils": "workspace:*",
+    "class-validator": "^0.14.1",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.344.0",
+    "motion": "^11.0.0",
+    "next": "15.0.3",
+    "otplib": "^12.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "socket.io-client": "^4.7.4",
+    "sonner": "^1.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.3",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5"
+  }
+}

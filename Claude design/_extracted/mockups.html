@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AMNEX Pre-Sales Orchestrator — UI Mockups</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* AMNEX brand */
+    --navy: #1a2456;
+    --navy-deep: #0f1738;
+    --navy-soft: #2a3470;
+    --navy-tint: #eef0f8;
+    --paper: #fdfcf9;
+    --surface: #ffffff;
+    --ink: #0a0e22;
+    --ink-soft: #4a4f6b;
+    --ink-faint: #8b90a5;
+    --line: #e3e5ed;
+    --line-soft: #f0f1f6;
+    --accent: #c46a2c;       /* warm rust accent for highlights */
+    --accent-soft: #fbf0e6;
+    --green: #2d6a4f;
+    --green-soft: #e6f0ea;
+    --amber: #b07b1f;
+    --amber-soft: #fbf3df;
+    --red: #8c2f24;
+    --red-soft: #fbe9e6;
+
+    --display: 'Fraunces', Georgia, serif;
+    --body: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    font-size: 14px;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === Navigation between mockups === */
+  .mockup-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    color: white;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--navy-deep);
+    display: flex; align-items: center; gap: 32px;
+  }
+  .mockup-nav .brand {
+    font-family: var(--display);
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: white;
+    border-left: 2px solid var(--accent);
+    padding-left: 12px;
+  }
+  .mockup-nav .brand small {
+    display: block; font-family: var(--body);
+    font-size: 10px; letter-spacing: 0.18em; opacity: 0.65; text-transform: uppercase;
+  }
+  .mockup-nav .links { display: flex; gap: 4px; margin-left: auto; }
+  .mockup-nav a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mockup-nav a:hover { background: rgba(255,255,255,0.08); color: white; }
+  .mockup-nav a.active { background: rgba(255,255,255,0.14); color: white; }
+
+  /* === Section heading === */
+  .section-intro {
+    max-width: 1280px; margin: 60px auto 24px; padding: 0 32px;
+  }
+  .section-intro .label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px; font-weight: 500;
+  }
+  .section-intro h1 {
+    font-family: var(--display);
+    font-size: 42px; letter-spacing: -0.02em;
+    color: var(--navy); margin-bottom: 12px; font-weight: 500;
+    line-height: 1.05;
+  }
+  .section-intro p {
+    color: var(--ink-soft); max-width: 720px; font-size: 15px;
+  }
+
+  /* === App shell common === */
+  .app-shell {
+    max-width: 1280px;
+    margin: 24px auto 80px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(15, 23, 56, 0.04), 0 12px 40px rgba(15, 23, 56, 0.06);
+  }
+  .app-topbar {
+    height: 52px;
+    background: var(--navy);
+    color: white;
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 16px;
+    border-bottom: 1px solid var(--navy-deep);
+  }
+  .app-topbar .brand-mini {
+    font-family: var(--display);
+    font-size: 14px; font-weight: 500;
+    border-left: 2px solid var(--accent);
+    padding-left: 10px; line-height: 1.1;
+  }
+  .app-topbar .brand-mini small {
+    display: block;
+    font-family: var(--body); font-size: 9px; opacity: 0.6;
+    letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .app-topbar .search {
+    flex: 1; max-width: 480px; margin: 0 24px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .app-topbar .search kbd {
+    margin-left: auto;
+    font-family: var(--mono); font-size: 10px;
+    background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;
+  }
+  .app-topbar .topbar-actions { display: flex; gap: 4px; align-items: center; }
+  .app-topbar .icon-btn {
+    width: 32px; height: 32px; display: grid; place-items: center;
+    border-radius: 6px; cursor: pointer;
+    transition: background 0.15s; position: relative;
+  }
+  .app-topbar .icon-btn:hover { background: rgba(255,255,255,0.1); }
+  .app-topbar .icon-btn .badge {
+    position: absolute; top: 4px; right: 4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--navy);
+  }
+  .app-topbar .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, #d4a373, #a06b40);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 500; color: white;
+  }
+
+  .app-body { display: grid; grid-template-columns: 220px 1fr; min-height: 720px; }
+
+  .sidebar {
+    background: var(--navy-tint);
+    border-right: 1px solid var(--line);
+    padding: 20px 12px;
+    font-size: 13px;
+  }
+  .sidebar .group {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-faint);
+    padding: 16px 8px 6px; font-weight: 500;
+  }
+  .sidebar .item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 6px;
+    color: var(--ink-soft); cursor: pointer;
+    margin-bottom: 1px;
+  }
+  .sidebar .item:hover { background: rgba(26,36,86,0.05); color: var(--navy); }
+  .sidebar .item.active {
+    background: var(--navy); color: white; font-weight: 500;
+  }
+  .sidebar .item.active::before {
+    content: ''; width: 3px; height: 14px; background: var(--accent);
+    margin-left: -10px; margin-right: 7px; border-radius: 2px;
+  }
+  .sidebar .item .ico {
+    width: 16px; height: 16px; opacity: 0.6;
+    display: grid; place-items: center;
+  }
+  .sidebar .item.active .ico { opacity: 1; }
+  .sidebar .item .count {
+    margin-left: auto; font-size: 11px;
+    background: rgba(0,0,0,0.06); padding: 1px 7px; border-radius: 999px;
+    font-family: var(--mono);
+  }
+  .sidebar .item.active .count { background: rgba(255,255,255,0.15); color: white; }
+
+  .main { padding: 28px 32px; overflow-y: auto; }
+
+  /* page header within main */
+  .page-h {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-h h2 {
+    font-family: var(--display); font-size: 28px; letter-spacing: -0.01em;
+    color: var(--navy); font-weight: 500; line-height: 1.1;
+  }
+  .page-h .crumbs {
+    font-size: 12px; color: var(--ink-faint);
+    font-family: var(--mono); margin-bottom: 6px; letter-spacing: 0.04em;
+  }
+  .page-h .crumbs a { color: var(--ink-faint); text-decoration: none; }
+  .page-h .crumbs a:hover { color: var(--navy); }
+
+  .btn {
+    font-family: var(--body); font-size: 13px;
+    padding: 8px 14px; border-radius: 6px; border: 0; cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+    display: inline-flex; align-items: center; gap: 8px; font-weight: 500;
+  }
+  .btn-primary { background: var(--navy); color: white; }
+  .btn-primary:hover { background: var(--navy-deep); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-secondary {
+    background: white; color: var(--navy);
+    border: 1px solid var(--line);
+  }
+  .btn-secondary:hover { border-color: var(--navy); }
+  .btn-ghost { background: transparent; color: var(--ink-soft); }
+  .btn-ghost:hover { color: var(--navy); background: var(--line-soft); }
+  .btn-danger {
+    background: var(--red-soft); color: var(--red);
+    border: 1px solid transparent;
+  }
+  .btn-danger:hover { background: white; border-color: var(--red); }
+
+  /* === INTAKE MOCKUP === */
+  .intake-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px;
+  }
+  .card-h {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 16px;
+  }
+  .card-h h3 {
+    font-family: var(--display); font-size: 18px; font-weight: 500;
+    color: var(--navy); letter-spacing: -0.005em;
+  }
+  .card-h .meta { font-size: 12px; color: var(--ink-faint); font-family: var(--mono); }
+
+  .form-row { margin-bottom: 14px; }
+  .form-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row.three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  .label-line {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 5px;
+  }
+  .label-line label {
+    font-size: 12px; font-weight: 500; color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+  .label-line .req { color: var(--accent); font-size: 10px; }
+  .conf-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-family: var(--mono); padding: 1px 7px;
+    border-radius: 999px; font-weight: 500;
+    margin-left: auto;
+  }
+  .conf-h { background: var(--green-soft); color: var(--green); }
+  .conf-m { background: var(--amber-soft); color: var(--amber); }
+  .conf-l { background: var(--red-soft); color: var(--red); }
+  .conf-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .conf-h .dot { background: var(--green); }
+  .conf-m .dot { background: var(--amber); }
+  .conf-l .dot { background: var(--red); }
+
+  .input, .select, .textarea {
+    width: 100%; font-family: var(--body); font-size: 13px;
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px;
+    background: white; color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input:focus, .select:focus, .textarea:focus {
+    outline: 0; border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(26,36,86,0.08);
+  }
+  .input.edited { border-color: var(--accent); background: var(--accent-soft); }
+  .input.edited::after { content: 'edited'; }
+  .textarea { resize: vertical; min-height: 80px; }
+  .source-line {
+    font-size: 11px; color: var(--ink-faint); margin-top: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .source-line a { color: var(--navy); text-decoration: none; }
+  .source-line a:hover { text-decoration: underline; }
+
+  .raw-input-area {
+    background: var(--paper); border: 1px dashed var(--line);
+    border-radius: 8px; padding: 16px; margin-bottom: 14px;
+  }
+  .raw-input-area textarea {
+    width: 100%; border: 0; background: transparent;
+    font-family: var(--body); font-size: 13px; resize: vertical;
+    min-height: 70px; outline: 0; color: var(--ink);
+  }
+
+  .file-list { display: flex; flex-direction: column; gap: 8px; }
+  .file-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px;
+    background: var(--paper); border-radius: 6px;
+    border: 1px solid var(--line-soft);
+    font-size: 13px;
+  }
+  .file-item .file-ico {
+    width: 28px; height: 28px; border-radius: 5px;
+    background: var(--navy-tint); color: var(--navy);
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+  }
+  .file-item .file-name { flex: 1; font-weight: 500; }
+  .file-item .file-meta { font-size: 11px; color: var(--ink-faint); font-family: var(--mono); }
+  .file-item .file-status {
+    font-size: 10px; padding: 2px 8px; border-radius: 999px;
+    background: var(--green-soft); color: var(--green); font-weight: 500;
+  }
+
+  .extract-banner {
+    background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+    color: white; padding: 16px 20px; border-radius: 10px;
+    margin: 16px 0;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .extract-banner .ai-glyph {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--accent); color: white;
+    display: grid; place-items: center; font-family: var(--display);
+    font-weight: 500; font-size: 16px;
+  }
+  .extract-banner .text {
+    flex: 1; font-size: 13px;
+  }
+  .extract-banner .text strong { font-weight: 500; display: block; margin-bottom: 2px; }
+  .extract-banner .text small { opacity: 0.7; font-size: 11px; }
+  .extract-banner .btn-primary {
+    background: white; color: var(--navy);
+  }
+  .extract-banner .btn-primary:hover { background: var(--paper); }
+
+  /* sales profile preview */
+  .stakeholder-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+  }
+  .stakeholder-row:last-child { border-bottom: 0; }
+  .avatar-lg {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #6e7ca3, #3a4878);
+    display: grid; place-items: center;
+    color: white; font-size: 11px; font-weight: 500;
+  }
+  .avatar-lg.a2 { background: linear-gradient(135deg, #c19465, #8a5a2c); }
+  .avatar-lg.a3 { background: linear-gradient(135deg, #6f8c70, #3d5740); }
+  .avatar-lg.a4 { background: linear-gradient(135deg, #a06f8a, #6c3d57); }
+  .stakeholder-row .info { flex: 1; }
+  .stakeholder-row .info .name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .stakeholder-row .info .role {
+    font-size: 11px; color: var(--ink-faint); font-family: var(--mono);
+    letter-spacing: 0.02em;
+  }
+  .stakeholder-row .reason {
+    font-size: 11px; color: var(--ink-faint); font-style: italic;
+    text-align: right;
+  }
+  .stakeholder-row .vl-pill {
+    font-size: 9px; font-family: var(--mono); letter-spacing: 0.06em;
+    padding: 2px 6px; background: var(--accent); color: white;
+    border-radius: 3px; font-weight: 500;
+  }
+
+  .footer-actions {
+    display: flex; gap: 12px; justify-content: flex-end;
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* === STAGE WORKSPACE MOCKUP === */
+  .stepper {
+    display: flex; align-items: center;
+    background: var(--paper);
+    padding: 18px 24px; border-radius: 10px;
+    border: 1px solid var(--line);
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .step {
+    display: flex; align-items: center; gap: 10px;
+    flex-shrink: 0; opacity: 0.4;
+    padding-right: 32px;
+    position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: ''; position: absolute; right: 0; top: 50%;
+    width: 24px; height: 1px;
+    background: var(--line);
+  }
+  .step.done { opacity: 0.7; }
+  .step.active { opacity: 1; }
+  .step .num {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid var(--line);
+    color: var(--ink-faint); font-size: 12px; font-weight: 500;
+    display: grid; place-items: center;
+    background: white; font-family: var(--mono);
+  }
+  .step.done .num { background: var(--navy); color: white; border-color: var(--navy); }
+  .step.active .num { background: var(--accent); color: white; border-color: var(--accent); }
+  .step .label-block { font-size: 12px; }
+  .step .label-block .stage-name { font-weight: 500; color: var(--ink); }
+  .step .label-block .stage-meta { color: var(--ink-faint); font-family: var(--mono); font-size: 10px; }
+
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .checklist-item:hover { background: var(--paper); }
+  .checklist-item .check {
+    width: 18px; height: 18px; flex-shrink: 0;
+    border: 1.5px solid var(--line);
+    border-radius: 4px; cursor: pointer;
+    display: grid; place-items: center;
+    margin-top: 1px;
+  }
+  .checklist-item.done .check {
+    background: var(--green); border-color: var(--green);
+  }
+  .checklist-item.done .check::after {
+    content: '✓'; color: white; font-size: 11px; font-weight: 600;
+  }
+  .checklist-item.done .text { color: var(--ink-faint); text-decoration: line-through; }
+  .checklist-item .text { font-size: 13px; }
+  .checklist-item .req-mark { color: var(--accent); margin-left: 4px; }
+  .checklist-item .meta { font-size: 11px; color: var(--ink-faint); font-family: var(--mono); margin-top: 2px; }
+
+  .decision-panel {
+    background: linear-gradient(135deg, var(--navy-tint), white);
+    border: 1px solid var(--navy-tint);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  .decision-panel h4 {
+    font-family: var(--display); font-size: 16px; font-weight: 500;
+    color: var(--navy); margin-bottom: 4px;
+  }
+  .decision-panel p {
+    font-size: 12px; color: var(--ink-soft); margin-bottom: 14px;
+  }
+  .decision-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .decision-btn {
+    background: white; border: 1px solid var(--line);
+    padding: 11px 12px; border-radius: 8px;
+    cursor: pointer; transition: all 0.15s;
+    text-align: left; font-family: var(--body);
+  }
+  .decision-btn:hover { border-color: var(--navy); transform: translateY(-1px); }
+  .decision-btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+  .decision-btn.primary:hover { background: var(--navy-deep); }
+  .decision-btn.danger { color: var(--red); }
+  .decision-btn.danger:hover { background: var(--red-soft); border-color: var(--red); }
+  .decision-btn .lbl { font-size: 13px; font-weight: 500; display: block; }
+  .decision-btn .desc { font-size: 10px; opacity: 0.7; font-family: var(--mono); letter-spacing: 0.01em; margin-top: 1px; display: block; }
+
+  .summary-list { font-size: 12px; }
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 0; border-bottom: 1px solid var(--line-soft);
+  }
+  .summary-row:last-child { border-bottom: 0; }
+  .summary-row .k { color: var(--ink-faint); font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; text-transform: uppercase; }
+  .summary-row .v { font-weight: 500; color: var(--ink); }
+  .summary-row .v.priority-high { color: var(--accent); }
+
+  .approvals-section {
+    margin-top: 18px; padding: 16px; border-radius: 8px;
+    background: var(--accent-soft); border: 1px solid #f0d9c0;
+  }
+  .approvals-section h4 {
+    font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--body);
+  }
+  .approval-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; border-bottom: 1px solid #f0d9c0; font-size: 12px;
+  }
+  .approval-row:last-child { border-bottom: 0; }
+  .approval-row .avatar-sm {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, #5a6789, #2e3a5e);
+    color: white; font-size: 10px; display: grid; place-items: center; font-weight: 500;
+  }
+  .approval-row .name { flex: 1; }
+  .approval-row .vote {
+    font-size: 10px; padding: 2px 7px; border-radius: 999px; font-family: var(--mono); font-weight: 500;
+  }
+  .vote.pending { background: white; color: var(--ink-faint); border: 1px solid var(--line); }
+  .vote.approve { background: var(--green-soft); color: var(--green); }
+  .vote.reject { background: var(--red-soft); color: var(--red); }
+
+  /* === BUILDER CONSOLE MOCKUP === */
+  .builder-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr 320px;
+    gap: 20px; min-height: 580px;
+  }
+  .builder-modules {
+    background: var(--paper);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 8px; font-size: 13px;
+  }
+  .builder-modules .group-h {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em;
+    color: var(--ink-faint); padding: 12px 10px 4px; text-transform: uppercase; font-weight: 500;
+  }
+  .builder-modules .m-item {
+    padding: 7px 12px; cursor: pointer; border-radius: 5px;
+    color: var(--ink-soft); margin-bottom: 1px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .builder-modules .m-item:hover { background: white; color: var(--navy); }
+  .builder-modules .m-item.active {
+    background: var(--navy); color: white; font-weight: 500;
+  }
+  .builder-modules .m-item .badge {
+    margin-left: auto; font-size: 10px; padding: 0 6px;
+    background: rgba(0,0,0,0.06); border-radius: 999px;
+    font-family: var(--mono); color: var(--ink-faint);
+  }
+  .builder-modules .m-item.active .badge {
+    background: rgba(255,255,255,0.18); color: white;
+  }
+
+  .builder-canvas {
+    background: white; border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px; overflow: auto;
+  }
+  .builder-canvas .canvas-h {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--line-soft);
+  }
+  .builder-canvas .canvas-h h3 {
+    font-family: var(--display); font-size: 20px; font-weight: 500; color: var(--navy);
+  }
+  .builder-canvas .canvas-h .meta { font-size: 11px; color: var(--ink-faint); font-family: var(--mono); margin-top: 2px; }
+
+  /* stage cards in template */
+  .stage-card {
+    background: var(--paper);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    gap: 14px; align-items: center;
+    cursor: grab;
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  .stage-card:hover { border-color: var(--navy); }
+  .stage-card.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .stage-card .sn {
+    width: 26px; height: 26px; border-radius: 6px; background: var(--navy);
+    color: white; font-family: var(--mono); font-size: 12px; font-weight: 500;
+    display: grid; place-items: center;
+  }
+  .stage-card.selected .sn { background: var(--accent); }
+  .stage-card .stage-info .nm {
+    font-weight: 500; font-size: 14px; color: var(--ink); margin-bottom: 2px;
+  }
+  .stage-card .stage-info .desc {
+    font-size: 11px; color: var(--ink-faint); font-family: var(--mono);
+  }
+  .stage-card .stage-meta { display: flex; gap: 6px; }
+  .pill {
+    font-size: 10px; padding: 2px 7px; border-radius: 4px;
+    font-family: var(--mono); font-weight: 500; letter-spacing: 0.02em;
+  }
+  .pill-checks { background: var(--green-soft); color: var(--green); }
+  .pill-rule { background: var(--navy-tint); color: var(--navy); }
+  .pill-sla { background: var(--amber-soft); color: var(--amber); }
+
+  .add-stage-btn {
+    width: 100%; padding: 14px; border: 1px dashed var(--line);
+    background: transparent; color: var(--ink-faint);
+    border-radius: 8px; cursor: pointer; font-family: var(--body);
+    font-size: 13px; transition: all 0.15s;
+  }
+  .add-stage-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* right panel: stage editor */
+  .builder-editor {
+    background: white; border: 1px solid var(--line); border-radius: 10px;
+    padding: 20px; font-size: 13px;
+  }
+  .builder-editor h4 {
+    font-family: var(--display); font-size: 16px; font-weight: 500; color: var(--navy); margin-bottom: 4px;
+  }
+  .builder-editor .ed-meta { font-size: 11px; color: var(--ink-faint); font-family: var(--mono); margin-bottom: 16px; }
+  .builder-editor .tab-row {
+    display: flex; gap: 4px; border-bottom: 1px solid var(--line-soft); margin-bottom: 14px;
+  }
+  .builder-editor .tab {
+    padding: 7px 12px; font-size: 12px; cursor: pointer;
+    color: var(--ink-faint); border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .builder-editor .tab.active { color: var(--navy); border-bottom-color: var(--accent); font-weight: 500; }
+
+  .ed-section { margin-bottom: 16px; }
+  .ed-section .ed-label {
+    font-size: 11px; color: var(--ink-faint); font-family: var(--mono);
+    letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500;
+  }
+  .ed-section .ed-input {
+    width: 100%; padding: 7px 10px; font-size: 12px; border-radius: 5px;
+    border: 1px solid var(--line); font-family: var(--body); background: white;
+  }
+  .ed-section .ed-input:focus { outline: 0; border-color: var(--navy); }
+  .checklist-editor .ce-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 0; font-size: 12px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .checklist-editor .ce-row:last-child { border-bottom: 0; }
+  .checklist-editor .ce-row .grip { color: var(--ink-faint); cursor: grab; }
+  .checklist-editor .ce-row .text { flex: 1; }
+  .checklist-editor .ce-row .req-toggle {
+    font-size: 9px; padding: 1px 6px; background: var(--accent-soft);
+    color: var(--accent); border-radius: 3px; font-family: var(--mono); font-weight: 500;
+  }
+
+  .rule-summary {
+    background: var(--paper); padding: 12px; border-radius: 6px;
+    border: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 11px;
+    color: var(--ink-soft); line-height: 1.5;
+  }
+  .rule-summary .k { color: var(--accent); font-weight: 500; }
+
+  .footer-section {
+    text-align: center; padding: 60px 24px;
+    color: var(--ink-faint); font-size: 12px; font-family: var(--mono);
+    letter-spacing: 0.04em;
+  }
+  .footer-section .divider {
+    width: 40px; height: 1px; background: var(--line);
+    margin: 16px auto;
+  }
+
+  /* very small screens fallback */
+  @media (max-width: 1100px) {
+    .intake-grid, .workspace-grid, .builder-grid { grid-template-columns: 1fr; }
+    .app-body { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="mockup-nav">
+  <div class="brand">
+    AMNEX Pre-Sales Orchestrator
+    <small>UI Mockups · Phase 0 + Phase 2 preview</small>
+  </div>
+  <div class="links">
+    <a href="#intake" class="active" onclick="setActive(this)">Intake</a>
+    <a href="#workspace" onclick="setActive(this)">Stage workspace</a>
+    <a href="#builder" onclick="setActive(this)">Builder Console</a>
+  </div>
+</nav>
+
+<!-- ================================================ INTAKE ================================================ -->
+<section id="intake">
+  <div class="section-intro">
+    <div class="label">Mockup 01 · Phase 0</div>
+    <h1>Intake — bid owner creates an opportunity</h1>
+    <p>The most-used screen. Bid owner pastes notes, drops in files, clicks <em>Extract</em>, reviews AI-populated fields with confidence + source attribution, and submits. Auto-tagged stakeholders preview before save.</p>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-topbar">
+      <div class="brand-mini">AMNEX<small>PRE-SALES</small></div>
+      <div class="search">
+        <span>⌕</span><span>Search opportunities, contacts, files…</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn" title="Notifications">⌥<span class="badge"></span></div>
+        <div class="icon-btn" title="Help">?</div>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar">
+        <div class="group">Workspace</div>
+        <div class="item"><span class="ico">◇</span> Dashboard</div>
+        <div class="item"><span class="ico">☷</span> My tasks <span class="count">7</span></div>
+        <div class="item"><span class="ico">⌘</span> Approvals <span class="count">3</span></div>
+
+        <div class="group">Opportunities</div>
+        <div class="item"><span class="ico">▤</span> All opportunities</div>
+        <div class="item active"><span class="ico">+</span> New opportunity</div>
+        <div class="item"><span class="ico">⊙</span> Staging inbox <span class="count">4</span></div>
+
+        <div class="group">Directory</div>
+        <div class="item"><span class="ico">☻</span> Contact book</div>
+
+        <div class="group">Insights</div>
+        <div class="item"><span class="ico">⎙</span> Reports</div>
+        <div class="item"><span class="ico">≡</span> Audit log</div>
+
+        <div class="group">Account</div>
+        <div class="item"><span class="ico">◐</span> Profile</div>
+      </aside>
+
+      <main class="main">
+        <div class="page-h">
+          <div>
+            <div class="crumbs"><a href="#">Opportunities</a> / New</div>
+            <h2>New opportunity</h2>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost">Save draft</button>
+            <button class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+
+        <div class="intake-grid">
+
+          <!-- LEFT: structured form -->
+          <div class="card">
+            <div class="card-h">
+              <div>
+                <h3>Opportunity details</h3>
+                <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;">AI-extracted from your inputs · review and edit before saving</div>
+              </div>
+              <div class="meta">extraction_v1 · 13.2s</div>
+            </div>
+
+            <div class="form-row">
+              <div class="label-line">
+                <label>Title</label><span class="req">required</span>
+                <span class="conf-badge conf-h"><span class="dot"></span>0.91</span>
+              </div>
+              <input class="input" value="Maharashtra Govt — Statewide Health Data Exchange RFP" />
+              <div class="source-line">
+                ↪ from <a href="#">RFP_MoHFW_2026.pdf</a> · page 1 · "Request for Proposal: Statewide Health Data Exchange…"
+              </div>
+            </div>
+
+            <div class="form-row two">
+              <div>
+                <div class="label-line">
+                  <label>Client</label><span class="req">required</span>
+                  <span class="conf-badge conf-h"><span class="dot"></span>0.94</span>
+                </div>
+                <input class="input" value="Govt of Maharashtra — MoHFW" />
+              </div>
+              <div>
+                <div class="label-line">
+                  <label>Source</label><span class="req">required</span>
+                  <span class="conf-badge conf-h"><span class="dot"></span>0.99</span>
+                </div>
+                <select class="select"><option>Email</option></select>
+              </div>
+            </div>
+
+            <div class="form-row three">
+              <div>
+                <div class="label-line">
+                  <label>Sector</label>
+                  <span class="conf-badge conf-h"><span class="dot"></span>0.97</span>
+                </div>
+                <select class="select"><option>Govt</option></select>
+              </div>
+              <div>
+                <div class="label-line">
+                  <label>Vertical</label>
+                  <span class="conf-badge conf-h"><span class="dot"></span>0.93</span>
+                </div>
+                <select class="select"><option>Data Fabrics</option></select>
+              </div>
+              <div>
+                <div class="label-line">
+                  <label>Region</label>
+                  <span class="conf-badge conf-h"><span class="dot"></span>0.99</span>
+                </div>
+                <select class="select"><option>Maharashtra</option></select>
+              </div>
+            </div>
+
+            <div class="form-row two">
+              <div>
+                <div class="label-line">
+                  <label>Deal size (₹)</label>
+                  <span class="conf-badge conf-m"><span class="dot"></span>0.74</span>
+                </div>
+                <input class="input edited" value="₹ 25,00,00,000" />
+                <div class="source-line">
+                  ↪ inferred — RFP states "scope worth INR 20–30 cr"; you adjusted to upper bound
+                </div>
+              </div>
+              <div>
+                <div class="label-line">
+                  <label>Deadline</label><span class="req">required</span>
+                  <span class="conf-badge conf-l"><span class="dot"></span>0.42</span>
+                </div>
+                <input class="input" value="15 Jun 2026 · 17:00 IST" style="border-color: var(--red); background: var(--red-soft);" />
+                <div class="source-line" style="color: var(--red);">
+                  ⚠ low confidence — AI saw two dates (1 Jul tender opening, 15 Jun submission). Verify.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="label-line">
+                <label>Notes</label>
+                <span class="conf-badge conf-m"><span class="dot"></span>0.68</span>
+              </div>
+              <textarea class="textarea">EMD ₹50 lakh required. Pre-bid meeting on 25 May. Eligibility: ≥ 3 govt healthcare projects in last 5 years (we have 4 — MoHFW Karnataka, NHA, AIIMS Delhi, ESIC).</textarea>
+            </div>
+          </div>
+
+          <!-- RIGHT: raw inputs + tagging -->
+          <div>
+            <div class="card" style="margin-bottom:18px;">
+              <div class="card-h">
+                <h3>Raw inputs</h3>
+                <div class="meta">3 files · 4.7 MB</div>
+              </div>
+
+              <div class="raw-input-area">
+                <textarea>WhatsApp note from Patil sir — RFP shared on email yesterday. Govt of Maharashtra, scope ₹20–30 cr, Data Fabric for state health exchange. Pre-bid meeting 25 May. Submit by 15 June 5pm.</textarea>
+              </div>
+
+              <div class="file-list">
+                <div class="file-item">
+                  <div class="file-ico">PDF</div>
+                  <div class="file-name">RFP_MoHFW_2026.pdf<div class="file-meta">2.4 MB · 47 pages</div></div>
+                  <div class="file-status">extracted</div>
+                </div>
+                <div class="file-item">
+                  <div class="file-ico">DOCX</div>
+                  <div class="file-name">Tech_eligibility_v3.docx<div class="file-meta">186 KB · 12 pages</div></div>
+                  <div class="file-status">extracted</div>
+                </div>
+                <div class="file-item">
+                  <div class="file-ico">JPG</div>
+                  <div class="file-name">whatsapp_thread.jpg<div class="file-meta">2.1 MB · OCR</div></div>
+                  <div class="file-status">extracted</div>
+                </div>
+              </div>
+
+              <div class="extract-banner">
+                <div class="ai-glyph">AI</div>
+                <div class="text">
+                  <strong>Extraction complete</strong>
+                  <small>13.2s · claude-sonnet-4-5 · 2 fields edited by you · re-run if needed</small>
+                </div>
+                <button class="btn btn-primary">Re-extract</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-h">
+                <h3>Auto-tagged stakeholders</h3>
+                <div class="meta">5 from rules · add manual</div>
+              </div>
+
+              <div>
+                <div class="stakeholder-row">
+                  <div class="avatar-lg a2">SM</div>
+                  <div class="info">
+                    <div class="name">Shubham Mehra <span class="vl-pill">VL</span></div>
+                    <div class="role">Vertical Lead — Data Fabrics</div>
+                  </div>
+                  <div class="reason">vertical → Data Fabrics</div>
+                </div>
+                <div class="stakeholder-row">
+                  <div class="avatar-lg a3">RK</div>
+                  <div class="info">
+                    <div class="name">Rohit Kulkarni</div>
+                    <div class="role">Regional Head — West</div>
+                  </div>
+                  <div class="reason">region → Maharashtra</div>
+                </div>
+                <div class="stakeholder-row">
+                  <div class="avatar-lg">PS</div>
+                  <div class="info">
+                    <div class="name">Pooja Sharma</div>
+                    <div class="role">Sector Lead — Govt</div>
+                  </div>
+                  <div class="reason">sector → Govt</div>
+                </div>
+                <div class="stakeholder-row">
+                  <div class="avatar-lg a4">AV</div>
+                  <div class="info">
+                    <div class="name">Anita Verma</div>
+                    <div class="role">Compliance Officer</div>
+                  </div>
+                  <div class="reason">govt + IN → compliance</div>
+                </div>
+                <div class="stakeholder-row">
+                  <div class="avatar-lg a2">DJ</div>
+                  <div class="info">
+                    <div class="name">Dheeraj Joshi</div>
+                    <div class="role">CFO</div>
+                  </div>
+                  <div class="reason">deal_size > 5 cr</div>
+                </div>
+              </div>
+
+              <button class="btn btn-ghost" style="margin-top:14px;width:100%;justify-content:center;border:1px dashed var(--line);">+ Add manual stakeholder</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn btn-secondary">Save as draft</button>
+          <button class="btn btn-primary">Create opportunity →</button>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ STAGE WORKSPACE ================================================ -->
+<section id="workspace">
+  <div class="section-intro">
+    <div class="label">Mockup 02 · Phase 0</div>
+    <h1>Stage workspace — driving an opportunity</h1>
+    <p>The opp's home. Stepper shows progression. Checklist enforces required work before transition. Decision panel offers all six actions. Right rail shows summary + (when applicable) parallel approvals with Vertical-Lead-aligns resolution.</p>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-topbar">
+      <div class="brand-mini">AMNEX<small>PRE-SALES</small></div>
+      <div class="search">
+        <span>⌕</span><span>OPP-20260509-0001</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn">⌥<span class="badge"></span></div>
+        <div class="icon-btn">?</div>
+        <div class="avatar">SM</div>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar">
+        <div class="group">Workspace</div>
+        <div class="item"><span class="ico">◇</span> Dashboard</div>
+        <div class="item"><span class="ico">☷</span> My tasks</div>
+        <div class="item"><span class="ico">⌘</span> Approvals <span class="count">3</span></div>
+
+        <div class="group">Opportunities</div>
+        <div class="item active"><span class="ico">▤</span> All opportunities</div>
+        <div class="item"><span class="ico">+</span> New opportunity</div>
+
+        <div class="group">Directory</div>
+        <div class="item"><span class="ico">☻</span> Contact book</div>
+
+        <div class="group">Insights</div>
+        <div class="item"><span class="ico">⎙</span> Reports</div>
+
+        <div class="group">Account</div>
+        <div class="item"><span class="ico">◐</span> Profile</div>
+      </aside>
+
+      <main class="main">
+        <div class="page-h">
+          <div>
+            <div class="crumbs"><a href="#">Opportunities</a> / OPP-20260509-0001</div>
+            <h2>MoHFW Statewide Health Data Exchange</h2>
+            <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;font-family:var(--mono);">
+              Govt of Maharashtra · Data Fabrics · ₹25 cr · deadline in <strong style="color:var(--accent);">37 days</strong>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost">Print</button>
+            <button class="btn btn-secondary">Edit</button>
+          </div>
+        </div>
+
+        <!-- Stage stepper -->
+        <div class="stepper">
+          <div class="step done">
+            <div class="num">1</div>
+            <div class="label-block">
+              <div class="stage-name">Intake</div>
+              <div class="stage-meta">2d · done</div>
+            </div>
+          </div>
+          <div class="step done">
+            <div class="num">2</div>
+            <div class="label-block">
+              <div class="stage-name">Triage</div>
+              <div class="stage-meta">1d · done</div>
+            </div>
+          </div>
+          <div class="step active">
+            <div class="num">3</div>
+            <div class="label-block">
+              <div class="stage-name">Qualify</div>
+              <div class="stage-meta">3d in stage · SLA 5d</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <div class="label-block">
+              <div class="stage-name">Decide</div>
+              <div class="stage-meta">pending</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">5</div>
+            <div class="label-block">
+              <div class="stage-name">Closed</div>
+              <div class="stage-meta">terminal</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+
+          <!-- main column -->
+          <div>
+            <div class="card">
+              <div class="card-h">
+                <h3>Qualify — work items</h3>
+                <div class="meta">2 of 4 done · 2 required remaining</div>
+              </div>
+
+              <div>
+                <div class="checklist-item done">
+                  <div class="check"></div>
+                  <div>
+                    <div class="text">Capability match noted <span class="req-mark">*</span></div>
+                    <div class="meta">checked by Shubham M. · 2 days ago</div>
+                  </div>
+                </div>
+                <div class="checklist-item done">
+                  <div class="check"></div>
+                  <div>
+                    <div class="text">Risk flags reviewed <span class="req-mark">*</span></div>
+                    <div class="meta">checked by Pooja S. · 1 day ago</div>
+                  </div>
+                </div>
+                <div class="checklist-item">
+                  <div class="check"></div>
+                  <div>
+                    <div class="text">Pricing band estimated <span class="req-mark">*</span></div>
+                    <div class="meta">required to advance</div>
+                  </div>
+                </div>
+                <div class="checklist-item">
+                  <div class="check"></div>
+                  <div>
+                    <div class="text">Compete landscape mapped</div>
+                    <div class="meta">optional</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="decision-panel">
+              <h4>Decide on next step</h4>
+              <p>Pursue requires all <em>required</em> checklist items checked. Reasons are mandatory for Drop, Reject, and Send Back.</p>
+              <div class="decision-grid">
+                <button class="decision-btn primary" disabled style="opacity:0.55;cursor:not-allowed;" title="Pricing band still required">
+                  <span class="lbl">→ Pursue</span>
+                  <span class="desc">advance to Decide</span>
+                </button>
+                <button class="decision-btn">
+                  <span class="lbl">↩ Send back</span>
+                  <span class="desc">return to Triage</span>
+                </button>
+                <button class="decision-btn">
+                  <span class="lbl">⏸ Defer</span>
+                  <span class="desc">remind later</span>
+                </button>
+                <button class="decision-btn">
+                  <span class="lbl">↑ Escalate</span>
+                  <span class="desc">push to higher</span>
+                </button>
+                <button class="decision-btn">
+                  <span class="lbl">⚯ Split</span>
+                  <span class="desc">into sub-opps</span>
+                </button>
+                <button class="decision-btn danger">
+                  <span class="lbl">✕ Drop</span>
+                  <span class="desc">close as no-go</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:18px;">
+              <div class="card-h">
+                <h3>Recent activity</h3>
+                <div class="meta">last 24 hours</div>
+              </div>
+              <div style="font-size:13px;">
+                <div style="padding:8px 0;border-bottom:1px solid var(--line-soft);">
+                  <strong>Pooja Sharma</strong> commented: <em>"Tender wants ABDM-conformant solution. We have it via NHA project. ✓"</em>
+                  <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">2h ago</div>
+                </div>
+                <div style="padding:8px 0;border-bottom:1px solid var(--line-soft);">
+                  <strong>Pooja Sharma</strong> ticked <em>Risk flags reviewed</em>
+                  <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">1d ago</div>
+                </div>
+                <div style="padding:8px 0;">
+                  <strong>Anita Verma</strong> uploaded <em>EMD_template_filled.pdf</em>
+                  <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">1d ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- right rail -->
+          <div>
+            <div class="card">
+              <div class="card-h"><h3>Summary</h3></div>
+              <div class="summary-list">
+                <div class="summary-row"><span class="k">Ref</span><span class="v" style="font-family:var(--mono);">OPP-20260509-0001</span></div>
+                <div class="summary-row"><span class="k">Owner</span><span class="v">Shubham M.</span></div>
+                <div class="summary-row"><span class="k">Vertical</span><span class="v">Data Fabrics</span></div>
+                <div class="summary-row"><span class="k">Sector</span><span class="v">Govt</span></div>
+                <div class="summary-row"><span class="k">Region</span><span class="v">Maharashtra</span></div>
+                <div class="summary-row"><span class="k">Deal size</span><span class="v">₹ 25 cr</span></div>
+                <div class="summary-row"><span class="k">Priority</span><span class="v priority-high">High</span></div>
+                <div class="summary-row"><span class="k">Deadline</span><span class="v">15 Jun 2026</span></div>
+                <div class="summary-row"><span class="k">Files</span><span class="v">4 attached</span></div>
+              </div>
+            </div>
+
+            <div class="approvals-section">
+              <h4>⚠ Decide stage will require approvals</h4>
+              <div class="approval-row">
+                <div class="avatar-sm">SM</div>
+                <div class="name">Shubham M. <span class="vl-pill" style="font-size:8px;padding:1px 4px;">VL</span></div>
+                <div class="vote pending">awaits</div>
+              </div>
+              <div class="approval-row">
+                <div class="avatar-sm">PS</div>
+                <div class="name">Pooja S. <span style="font-size:9px;color:var(--ink-faint);">strategist</span></div>
+                <div class="vote pending">awaits</div>
+              </div>
+              <div class="approval-row">
+                <div class="avatar-sm">DH</div>
+                <div class="name">D. Hegde <span style="font-size:9px;color:var(--ink-faint);">HOD</span></div>
+                <div class="vote pending">awaits</div>
+              </div>
+              <p style="font-size:11px;margin-top:10px;color:var(--ink-soft);">
+                Parallel votes. <strong>Vertical Lead's vote aligns final outcome.</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================ BUILDER CONSOLE ================================================ -->
+<section id="builder">
+  <div class="section-intro">
+    <div class="label">Mockup 03 · Phase 2 preview</div>
+    <h1>Builder Console — admin shapes the system</h1>
+    <p>Where admins configure fields, forms, stage templates, decision rules, stakeholder rules, prompts, dashboards, limits, and themes — without code. Below: editing a Govt RFP stage template's <em>Qualify</em> stage.</p>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-topbar">
+      <div class="brand-mini">AMNEX<small>PRE-SALES · ADMIN</small></div>
+      <div class="search">
+        <span>⌕</span><span>Search Builder…</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="topbar-actions">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);font-family:var(--mono);margin-right:8px;letter-spacing:0.04em;">
+          DRAFT · UNPUBLISHED CHANGES (3)
+        </div>
+        <button class="btn btn-secondary" style="padding:6px 12px;">Discard</button>
+        <button class="btn" style="padding:6px 14px;background:var(--accent);color:white;">Publish</button>
+        <div class="avatar" style="margin-left:8px;">AD</div>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar">
+        <div class="group">Builder Console</div>
+        <div class="item"><span class="ico">▦</span> Fields</div>
+        <div class="item"><span class="ico">⊞</span> Forms</div>
+        <div class="item active"><span class="ico">≡</span> Stage Templates <span class="count">6</span></div>
+        <div class="item"><span class="ico">⌘</span> Decision Rules</div>
+        <div class="item"><span class="ico">☰</span> Stakeholder Rules</div>
+        <div class="item"><span class="ico">⌕</span> Search Recipes</div>
+        <div class="item"><span class="ico">⌥</span> Notification Rules</div>
+        <div class="item"><span class="ico">𝒶</span> AI Prompts</div>
+        <div class="item"><span class="ico">⎚</span> Limits</div>
+        <div class="item"><span class="ico">◐</span> Themes</div>
+        <div class="item"><span class="ico">⏚</span> Localization</div>
+        <div class="item"><span class="ico">⎏</span> Dashboards</div>
+        <div class="item"><span class="ico">⊠</span> Roles & permissions</div>
+        <div class="item"><span class="ico">⚒</span> Feature flags</div>
+      </aside>
+
+      <main class="main">
+        <div class="page-h">
+          <div>
+            <div class="crumbs"><a href="#">Builder</a> / Stage Templates / <a href="#">Govt RFP — large</a></div>
+            <h2>Govt RFP — large (₹>25 cr)</h2>
+            <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;font-family:var(--mono);">applies-when: <span style="color:var(--navy);">vertical = data_fabrics AND deal_size_inr &gt; 25 00 00 000</span> · 8 stages · used by 14 opps</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost">Test on opp…</button>
+            <button class="btn btn-secondary">Diff vs published</button>
+            <button class="btn btn-primary">+ Add stage</button>
+          </div>
+        </div>
+
+        <div class="builder-grid">
+
+          <!-- Modules already in sidebar; replace this column with stage-list summary navigation -->
+          <div class="builder-modules">
+            <div class="group-h">Sections of this template</div>
+            <div class="m-item"><span>① Settings</span></div>
+            <div class="m-item active"><span>② Stages</span><span class="badge">8</span></div>
+            <div class="m-item"><span>③ Default rules</span></div>
+            <div class="m-item"><span>④ Notifications</span></div>
+            <div class="m-item"><span>⑤ Validation</span></div>
+            <div class="m-item"><span>⑥ History</span><span class="badge">12</span></div>
+
+            <div class="group-h">Fast actions</div>
+            <div class="m-item" style="font-size:12px;">⎘ Clone template</div>
+            <div class="m-item" style="font-size:12px;">↥ Export JSON</div>
+            <div class="m-item" style="font-size:12px;">↦ Move to archive</div>
+          </div>
+
+          <!-- Stage list canvas -->
+          <div class="builder-canvas">
+            <div class="canvas-h">
+              <div>
+                <h3>Stages</h3>
+                <div class="meta">drag to reorder · click to edit</div>
+              </div>
+              <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono);">8 stages · avg cycle 14d</div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">1</div>
+              <div class="stage-info">
+                <div class="nm">Intake</div>
+                <div class="desc">capture + AI extract · 16 fields</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">3 checks</span>
+                <span class="pill pill-sla">2d</span>
+              </div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">2</div>
+              <div class="stage-info">
+                <div class="nm">Triage</div>
+                <div class="desc">initial fit + dedupe</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">2 checks</span>
+                <span class="pill pill-sla">1d</span>
+              </div>
+            </div>
+
+            <div class="stage-card selected">
+              <div class="sn">3</div>
+              <div class="stage-info">
+                <div class="nm">Qualify</div>
+                <div class="desc">capability match + risk + pricing</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">4 checks</span>
+                <span class="pill pill-rule">qualify_default</span>
+                <span class="pill pill-sla">5d</span>
+              </div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">4</div>
+              <div class="stage-info">
+                <div class="nm">Solution design</div>
+                <div class="desc">architect + estimation</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">5 checks</span>
+                <span class="pill pill-sla">7d</span>
+              </div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">5</div>
+              <div class="stage-info">
+                <div class="nm">Pricing approval</div>
+                <div class="desc">CFO + commercial sign-off</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">3 checks</span>
+                <span class="pill pill-rule">cfo_required</span>
+                <span class="pill pill-sla">2d</span>
+              </div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">6</div>
+              <div class="stage-info">
+                <div class="nm">Decide</div>
+                <div class="desc">final maker-checker</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">2 checks</span>
+                <span class="pill pill-rule">vl_aligns</span>
+                <span class="pill pill-sla">3d</span>
+              </div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">7</div>
+              <div class="stage-info">
+                <div class="nm">Submit + Q&amp;A</div>
+                <div class="desc">to client + clarifications</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill pill-checks">4 checks</span>
+                <span class="pill pill-sla">14d</span>
+              </div>
+            </div>
+
+            <div class="stage-card">
+              <div class="sn">8</div>
+              <div class="stage-info">
+                <div class="nm">Closed</div>
+                <div class="desc">won / lost / dropped</div>
+              </div>
+              <div class="stage-meta">
+                <span class="pill" style="background:var(--line-soft);color:var(--ink-faint);">terminal</span>
+              </div>
+            </div>
+
+            <button class="add-stage-btn">+ Add a stage</button>
+          </div>
+
+          <!-- Stage editor right panel -->
+          <div class="builder-editor">
+            <h4>Editing: Qualify</h4>
+            <div class="ed-meta">stage 3 of 8 · code: qualify · changes saved · v1.4 (draft)</div>
+
+            <div class="tab-row">
+              <div class="tab active">Basics</div>
+              <div class="tab">Work items</div>
+              <div class="tab">Decision</div>
+              <div class="tab">Stakeholders</div>
+              <div class="tab">Notify</div>
+              <div class="tab">Transitions</div>
+            </div>
+
+            <div class="ed-section">
+              <div class="ed-label">Display name</div>
+              <input class="ed-input" value="Qualify" />
+            </div>
+
+            <div class="ed-section">
+              <div class="ed-label">Description</div>
+              <input class="ed-input" value="Capability match + risk + pricing band" />
+            </div>
+
+            <div class="ed-section">
+              <div class="ed-label">SLA (hours)</div>
+              <input class="ed-input" value="120" type="number" />
+            </div>
+
+            <div class="ed-section">
+              <div class="ed-label">Required checklist (drag to reorder)</div>
+              <div class="checklist-editor">
+                <div class="ce-row">
+                  <span class="grip">☰</span>
+                  <span class="text">Capability match noted</span>
+                  <span class="req-toggle">required</span>
+                </div>
+                <div class="ce-row">
+                  <span class="grip">☰</span>
+                  <span class="text">Risk flags reviewed</span>
+                  <span class="req-toggle">required</span>
+                </div>
+                <div class="ce-row">
+                  <span class="grip">☰</span>
+                  <span class="text">Pricing band estimated</span>
+                  <span class="req-toggle">required</span>
+                </div>
+                <div class="ce-row">
+                  <span class="grip">☰</span>
+                  <span class="text">Compete landscape mapped</span>
+                  <span style="font-size:9px;color:var(--ink-faint);font-family:var(--mono);">optional</span>
+                </div>
+              </div>
+              <button class="btn btn-ghost" style="margin-top:8px;font-size:12px;padding:5px 10px;">+ Add item</button>
+            </div>
+
+            <div class="ed-section">
+              <div class="ed-label">Decision rule</div>
+              <div class="rule-summary">
+                <div><span class="k">rule:</span> qualify_default</div>
+                <div><span class="k">maker:</span> bid_owner</div>
+                <div><span class="k">checkers:</span> [vertical_lead (veto), strategist]</div>
+                <div><span class="k">resolution:</span> vertical_lead_aligns</div>
+                <div><span class="k">auto:</span> deal_size &gt; 5cr → add cfo as checker</div>
+              </div>
+            </div>
+
+            <div class="ed-section">
+              <div class="ed-label">Stakeholder rule</div>
+              <div class="rule-summary">
+                <div><span class="k">rule:</span> tag_default</div>
+                <div><span class="k">includes:</span> VL, Regional Head, Sector Lead, Compliance, CFO (if size&gt;5cr)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<div class="footer-section">
+  <div class="divider"></div>
+  AMNEX Pre-Sales Orchestrator · UI Mockups · Static prototype · Not connected to real data
+  <div class="divider"></div>
+</div>
+
+<script>
+  function setActive(el){
+    document.querySelectorAll('.mockup-nav a').forEach(a => a.classList.remove('active'));
+    el.classList.add('active');
+  }
+  // Update nav state based on scroll position
+  const sections = ['intake','workspace','builder'];
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY + 200;
+    let active = sections[0];
+    for (const id of sections){
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= y) active = id;
+    }
+    document.querySelectorAll('.mockup-nav a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#'+active);
+    });
+  });
+</script>
+
+</body>
+</html>

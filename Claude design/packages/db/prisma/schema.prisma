@@ -1,0 +1,986 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ──────────────────────────────────────
+// Enums
+// ──────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  VENDOR
+  KITCHEN_STAFF
+  CASHIER
+  CUSTOMER
+}
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+  WASTAGE
+}
+
+enum OrderStatus {
+  PLACED
+  CONFIRMED
+  PREPARING
+  READY
+  PICKED_UP
+  CANCELLED
+}
+
+enum PaymentMethod {
+  WALLET
+  UPI
+  CARD
+  CASH
+  COUPON
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum WalletTransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FLAT
+}
+
+enum DevicePlatform {
+  IOS
+  ANDROID
+  WEB
+}
+
+enum FeedbackKind {
+  FEEDBACK
+  SUGGESTION
+  ISSUE
+  REFUND
+}
+
+enum FeedbackCategory {
+  FOOD_QUALITY
+  HYGIENE
+  STAFF
+  VENDOR
+  CANTEEN
+  SUGGESTION
+  OTHER
+}
+
+enum FeedbackStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+  REJECTED
+}
+
+// ──────────────────────────────────────
+// Models
+// ──────────────────────────────────────
+
+model User {
+  id           String   @id @default(uuid())
+  email        String
+  phone        String?
+  name         String
+  role         Role     @default(CUSTOMER)
+  passwordHash String   @map("password_hash")
+  isActive     Boolean  @default(true) @map("is_active")
+  avatar       String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  vendor            Vendor?
+  orders            Order[]
+  payments          Payment[]
+  wallet            Wallet?
+  feedbacks         Feedback[]
+  feedbackEntries   FeedbackEntry[]
+  notifications     Notification[]
+  auditLogs         AuditLog[]
+  deviceTokens      DeviceToken[]
+  stockMovements    StockMovement[]
+
+  @@unique([email, role])
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  logo      String?
+  address   String?
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  canteens Canteen[]
+  vendors  Vendor[]
+
+  @@index([slug])
+  @@map("organizations")
+}
+
+model Canteen {
+  id             String   @id @default(uuid())
+  name           String
+  organizationId String   @map("organization_id")
+  address        String?
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  outlets      Outlet[]
+  mealSlots    MealSlot[]
+
+  @@index([organizationId])
+  @@map("canteens")
+}
+
+model Outlet {
+  id         String  @id @default(uuid())
+  name       String
+  canteenId  String  @map("canteen_id")
+  type       String?
+  isActive   Boolean @default(true) @map("is_active")
+
+  canteen        Canteen         @relation(fields: [canteenId], references: [id], onDelete: Cascade)
+  counters       Counter[]
+  menuItems      MenuItem[]
+  orders         Order[]
+  inventoryItems InventoryItem[]
+
+  @@index([canteenId])
+  @@map("outlets")
+}
+
+model Counter {
+  id       String  @id @default(uuid())
+  name     String
+  outletId String  @map("outlet_id")
+  isActive Boolean @default(true) @map("is_active")
+
+  outlet Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+
+  @@index([outletId])
+  @@map("counters")
+}
+
+model Vendor {
+  id             String  @id @default(uuid())
+  userId         String  @unique @map("user_id")
+  organizationId String  @map("organization_id")
+  vendorCode     String  @unique @map("vendor_code")
+  businessName   String  @map("business_name")
+  ownerName      String? @map("owner_name")
+  contactEmail   String? @map("contact_email")
+  contactPhone   String? @map("contact_phone")
+  gstNumber      String? @map("gst_number")
+  panNumber      String? @map("pan_number")
+  fssaiLicense   String? @map("fssai_license")
+  address        String?
+  city           String?
+  state          String?
+  pincode        String?
+  bankAccount    String? @map("bank_account")
+  bankIfsc       String? @map("bank_ifsc")
+  cuisineTypes   String? @map("cuisine_types")
+  rating         Float?
+  metadata       Json?
+  isVerified     Boolean @default(false) @map("is_verified")
+  isActive       Boolean @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  menuItems    MenuItem[]
+  feedbackEntries FeedbackEntry[]
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([vendorCode])
+  @@map("vendors")
+}
+
+// ─── Registration requests (vendor / admin / employee self-signup) ───
+enum RegistrationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model RegistrationRequest {
+  id            String              @id @default(uuid())
+  email         String
+  name          String
+  phone         String?
+  requestedRole Role                @map("requested_role")
+  formData      Json                @map("form_data")
+  status        RegistrationStatus  @default(PENDING)
+  reviewedBy    String?             @map("reviewed_by")
+  reviewedAt    DateTime?           @map("reviewed_at")
+  rejectionReason String?           @map("rejection_reason")
+  createdAt     DateTime            @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([requestedRole])
+  @@index([email])
+  @@map("registration_requests")
+}
+
+// ─── Form templates (super admin defines registration forms) ───
+model FormTemplate {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  title       String
+  description String?
+  targetRole  Role     @map("target_role")
+  schema      Json
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([key])
+  @@index([targetRole])
+  @@map("form_templates")
+}
+
+// ─── Role-based page permissions (super admin toggles) ───
+model RolePermission {
+  id        String   @id @default(uuid())
+  role      Role
+  pageKey   String   @map("page_key")
+  canAccess Boolean  @default(true) @map("can_access")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([role, pageKey])
+  @@index([role])
+  @@map("role_permissions")
+}
+
+model Category {
+  id        String  @id @default(uuid())
+  name      String
+  slug      String  @unique
+  icon      String?
+  sortOrder Int     @default(0) @map("sort_order")
+  isActive  Boolean @default(true) @map("is_active")
+
+  menuItems MenuItem[]
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model MenuItem {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  price           Decimal  @db.Decimal(10, 2)
+  image           String?
+  categoryId      String   @map("category_id")
+  outletId        String   @map("outlet_id")
+  vendorId        String?  @map("vendor_id")
+  isVeg           Boolean  @default(true) @map("is_veg")
+  isAvailable     Boolean  @default(true) @map("is_available")
+  preparationTime Int?     @map("preparation_time")
+  calories        Int?
+  allergens       String[]
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  category   Category    @relation(fields: [categoryId], references: [id])
+  outlet     Outlet      @relation(fields: [outletId], references: [id])
+  vendor     Vendor?     @relation(fields: [vendorId], references: [id])
+  orderItems OrderItem[]
+
+  @@index([categoryId])
+  @@index([outletId])
+  @@index([vendorId])
+  @@index([isAvailable])
+  @@map("menu_items")
+}
+
+model MealSlot {
+  id        String  @id @default(uuid())
+  name      String
+  startTime String  @map("start_time")
+  endTime   String  @map("end_time")
+  canteenId String  @map("canteen_id")
+  isActive  Boolean @default(true) @map("is_active")
+
+  canteen Canteen @relation(fields: [canteenId], references: [id], onDelete: Cascade)
+
+  @@index([canteenId])
+  @@map("meal_slots")
+}
+
+model InventoryItem {
+  id           String   @id @default(uuid())
+  name         String
+  unit         String
+  currentStock Decimal  @default(0) @map("current_stock") @db.Decimal(10, 2)
+  minStock     Decimal  @default(0) @map("min_stock") @db.Decimal(10, 2)
+  maxStock     Decimal  @default(0) @map("max_stock") @db.Decimal(10, 2)
+  outletId     String   @map("outlet_id")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  outlet         Outlet          @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  stockMovements StockMovement[]
+
+  @@index([outletId])
+  @@map("inventory_items")
+}
+
+model StockMovement {
+  id              String            @id @default(uuid())
+  inventoryItemId String            @map("inventory_item_id")
+  quantity        Decimal           @db.Decimal(10, 2)
+  type            StockMovementType
+  reason          String?
+  createdBy       String            @map("created_by")
+  createdAt       DateTime          @default(now()) @map("created_at")
+
+  inventoryItem InventoryItem @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [createdBy], references: [id])
+
+  @@index([inventoryItemId])
+  @@index([createdBy])
+  @@map("stock_movements")
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  orderNumber String      @unique @map("order_number")
+  userId      String      @map("user_id")
+  outletId    String      @map("outlet_id")
+  status      OrderStatus @default(PLACED)
+  totalAmount Decimal     @map("total_amount") @db.Decimal(10, 2)
+  notes       String?
+  tokenNumber String?     @map("token_number")
+  placedAt    DateTime    @default(now()) @map("placed_at")
+  completedAt DateTime?   @map("completed_at")
+
+  user       User        @relation(fields: [userId], references: [id])
+  outlet     Outlet      @relation(fields: [outletId], references: [id])
+  orderItems OrderItem[]
+  payment    Payment?
+  feedback   Feedback?
+
+  @@index([userId])
+  @@index([outletId])
+  @@index([status])
+  @@index([orderNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String  @id @default(uuid())
+  orderId    String  @map("order_id")
+  menuItemId String  @map("menu_item_id")
+  quantity   Int
+  unitPrice  Decimal @map("unit_price") @db.Decimal(10, 2)
+  totalPrice Decimal @map("total_price") @db.Decimal(10, 2)
+  notes      String?
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  @@index([orderId])
+  @@index([menuItemId])
+  @@map("order_items")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String        @unique @map("order_id")
+  userId        String        @map("user_id")
+  amount        Decimal       @db.Decimal(10, 2)
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionId String?       @unique @map("transaction_id")
+  paidAt        DateTime?     @map("paid_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@map("payments")
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  balance   Decimal  @default(0) @db.Decimal(10, 2)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+
+  @@map("wallets")
+}
+
+model WalletTransaction {
+  id          String                @id @default(uuid())
+  walletId    String                @map("wallet_id")
+  amount      Decimal               @db.Decimal(10, 2)
+  type        WalletTransactionType
+  description String?
+  createdAt   DateTime              @default(now()) @map("created_at")
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId])
+  @@map("wallet_transactions")
+}
+
+// Legacy promotional/discount coupons (unused in current product). Kept to avoid breaking seed fixtures.
+model PromoCoupon {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  description    String?
+  discountType   DiscountType @map("discount_type")
+  discountValue  Decimal      @map("discount_value") @db.Decimal(10, 2)
+  minOrderAmount Decimal?     @map("min_order_amount") @db.Decimal(10, 2)
+  maxUses        Int?         @map("max_uses")
+  usedCount      Int          @default(0) @map("used_count")
+  validFrom      DateTime     @map("valid_from")
+  validUntil     DateTime     @map("valid_until")
+  isActive       Boolean      @default(true) @map("is_active")
+
+  @@index([code])
+  @@map("promo_coupons")
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  orderId   String   @unique @map("order_id")
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user  User  @relation(fields: [userId], references: [id])
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([orderId])
+  @@map("feedbacks")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  title     String
+  body      String
+  type      String
+  isRead    Boolean  @default(false) @map("is_read")
+  data      Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  action    String
+  entity    String
+  entityId  String   @map("entity_id")
+  oldData   Json?    @map("old_data")
+  newData   Json?    @map("new_data")
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@map("audit_logs")
+}
+
+model DeviceToken {
+  id        String         @id @default(uuid())
+  userId    String         @map("user_id")
+  token     String         @unique
+  platform  DevicePlatform
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("device_tokens")
+}
+
+// Custom roles (super admin can add/manage in addition to built-in Role enum)
+model CustomRole {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  label       String?
+  color       String?
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@map("custom_roles")
+}
+
+// Single-row system configuration (key/value store)
+model SystemConfig {
+  key   String @id
+  value Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_config")
+}
+
+// Per-day home page content (admin-configurable trivia, emergency banner, today's lunch)
+model HomePageContent {
+  id         String   @id @default(cuid())
+  date       DateTime @unique @db.Date
+  trivia     Json     // [{ q: string, a: string, fun?: string }, ...]
+  emergency  Json?    // { title?, body?, severity? } | null
+  todayLunch Json     @map("today_lunch") // [{ name, description?, imageUrl?, vendor?, calories?, isVeg? }, ...]
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  updatedBy  String?  @map("updated_by")
+
+  @@map("home_page_content")
+}
+
+// ──────────────────────────────────────
+// Phase 1: Coupon entitlement + redemption
+// ──────────────────────────────────────
+
+enum CouponType {
+  EMPLOYEE
+  VISITOR
+}
+
+enum CouponStatus {
+  GENERATED
+  BOOKED
+  REDEEMED
+  CANCELLED
+  EXPIRED
+  REFUND_REQUESTED
+  REFUND_APPROVED
+  REFUND_REJECTED
+  REFUNDED
+  DISPUTED
+}
+
+enum RedemptionMethod {
+  QR
+  AUTHENTICATOR
+  VALIDATION_CODE
+  OFFLINE
+}
+
+enum WaitlistStatus {
+  WAITING
+  OFFERED
+  CLAIMED
+  EXPIRED
+  SKIPPED
+}
+
+enum SecurityEventType {
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  LOGOUT
+  TOTP_VERIFIED
+  TOTP_FAILED
+  COUPON_ISSUED
+  COUPON_BOOKED
+  COUPON_CANCELLED
+  COUPON_REDEEMED
+  COUPON_REDEMPTION_FAILED
+  VISITOR_SPONSORED
+  VISITOR_REDEEMED
+  THALI_DECLARED
+  THALI_LOCKED
+  REFUND_REQUESTED
+  REFUND_APPROVED
+  REFUND_REJECTED
+  PERMISSION_CHANGED
+  ROLE_CREATED
+  CONFIG_CHANGED
+  USER_CREATED
+  USER_DEACTIVATED
+  USER_REGISTERED
+}
+
+enum SecuritySeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// Vendor declares daily thali quantity (locks at configurable cutoff, default 09:00)
+model ThaliDeclaration {
+  id            String    @id @default(uuid())
+  date          DateTime  @db.Date
+  vendorId      String    @map("vendor_id")
+  quantity      Int
+  declaredAt    DateTime  @default(now()) @map("declared_at")
+  lockedAt      DateTime? @map("locked_at")
+  lockedQty     Int?      @map("locked_qty")
+  isLate        Boolean   @default(false) @map("is_late")
+  lateReason    String?   @map("late_reason")
+  adminOverride Boolean   @default(false) @map("admin_override")
+  overriddenBy  String?   @map("overridden_by")
+
+  @@unique([date, vendorId])
+  @@index([date])
+  @@map("thali_declarations")
+}
+
+// Coupon pool generated from declared quantity
+model CouponPool {
+  id             String   @id @default(uuid())
+  date           DateTime @db.Date @unique
+  totalQty       Int      @map("total_qty")
+  employeeQty    Int      @default(0) @map("employee_qty")
+  visitorQty     Int      @default(0) @map("visitor_qty")
+  available      Int
+  generatedAt    DateTime @default(now()) @map("generated_at")
+  closedAt       DateTime? @map("closed_at")
+
+  coupons Coupon[]
+
+  @@index([date])
+  @@map("coupon_pools")
+}
+
+model Coupon {
+  id              String        @id @default(uuid())
+  poolId          String        @map("pool_id")
+  date            DateTime      @db.Date
+  couponCode      String        @unique @map("coupon_code")           // human-visible masked code
+  signedToken     String        @unique @map("signed_token")           // HS256 JWT in QR
+  validationCode  String?       @map("validation_code")                // visitor fallback when QR fails
+  type            CouponType
+  status          CouponStatus  @default(GENERATED)
+  assignedUserId  String?       @map("assigned_user_id")               // employee
+  visitorId       String?       @map("visitor_id")                     // visitor
+  slotStart       DateTime?     @map("slot_start")
+  slotEnd         DateTime?     @map("slot_end")
+  bookedAt        DateTime?     @map("booked_at")
+  cancelledAt     DateTime?     @map("cancelled_at")
+  cancelReason    String?       @map("cancel_reason")
+  redeemedAt      DateTime?     @map("redeemed_at")
+  redeemedByVendorId String?    @map("redeemed_by_vendor_id")
+  redemptionMethod RedemptionMethod? @map("redemption_method")
+  expiresAt       DateTime?     @map("expires_at")
+  metadata        Json?
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  pool        CouponPool    @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  redemption  Redemption?
+  visitor     Visitor?      @relation(fields: [visitorId], references: [id])
+
+  @@unique([assignedUserId, date])  // one coupon per employee per day
+  @@index([poolId])
+  @@index([status])
+  @@index([assignedUserId])
+  @@index([date, status])
+  @@map("coupons")
+}
+
+model Visitor {
+  id                  String    @id @default(uuid())
+  name                String
+  mobile              String?
+  email               String?
+  company             String
+  purpose             String
+  hostEmployeeId      String    @map("host_employee_id")
+  sponsoredByAdminId  String    @map("sponsored_by_admin_id")
+  shareLink           String?   @map("share_link")                    // public visitor coupon page URL
+  createdAt           DateTime  @default(now()) @map("created_at")
+
+  coupons Coupon[]
+
+  @@index([hostEmployeeId])
+  @@index([sponsoredByAdminId])
+  @@map("visitors")
+}
+
+model Redemption {
+  id           String           @id @default(uuid())
+  couponId     String           @unique @map("coupon_id")
+  method       RedemptionMethod
+  vendorId     String           @map("vendor_id")
+  vendorStaffId String?         @map("vendor_staff_id")
+  deviceId     String?          @map("device_id")
+  redeemedAt   DateTime         @default(now()) @map("redeemed_at")
+  syncStatus   String           @default("synced") @map("sync_status") // synced | pending | conflict
+  ipAddress    String?          @map("ip_address")
+
+  coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId])
+  @@index([redeemedAt])
+  @@map("redemptions")
+}
+
+// Waitlist (joined when user tries to book after sold-out)
+model Waitlist {
+  id              String         @id @default(uuid())
+  employeeId      String         @map("employee_id")
+  date            DateTime       @db.Date
+  attemptedAt     DateTime       @default(now()) @map("attempted_at")
+  status          WaitlistStatus @default(WAITING)
+  offerExpiresAt  DateTime?      @map("offer_expires_at")
+  claimedAt       DateTime?      @map("claimed_at")
+
+  @@unique([employeeId, date])
+  @@index([date, status])
+  @@map("waitlist")
+}
+
+// Per-employee TOTP secret (replacing SMS OTP for fallback redemption)
+model EmployeeTotpSecret {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  secret    String   // base32-encoded
+  enrolled  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("employee_totp_secrets")
+}
+
+// Security audit feed (super admin live page)
+model SecurityAuditEvent {
+  id         String            @id @default(uuid())
+  eventType  SecurityEventType @map("event_type")
+  severity   SecuritySeverity  @default(INFO)
+  actorId    String?           @map("actor_id")
+  actorRole  String?           @map("actor_role")
+  actorEmail String?           @map("actor_email")
+  entityType String?           @map("entity_type")     // coupon | login | thali | etc
+  entityId   String?           @map("entity_id")
+  summary    String                                    // short human-readable
+  before     Json?
+  after      Json?
+  ipAddress  String?           @map("ip_address")
+  userAgent  String?           @map("user_agent")
+  deviceId   String?           @map("device_id")
+  metadata   Json?
+  createdAt  DateTime          @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([severity, createdAt])
+  @@index([createdAt])
+  @@map("security_audit_events")
+}
+
+// ──────────────────────────────────────
+// Feedback subsystem (multi-kind: feedback / suggestion / issue / refund)
+// ──────────────────────────────────────
+
+// ──────────────────────────────────────
+// Vendor profile form builder (metadata-driven)
+// ──────────────────────────────────────
+
+enum VendorFormStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model VendorFormCategory {
+  id           String   @id @default(cuid())
+  key          String   @unique
+  label        String
+  description  String?
+  icon         String?
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  fields       VendorFormField[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@map("vendor_form_categories")
+}
+
+model VendorFormField {
+  id                 String              @id @default(cuid())
+  categoryId         String
+  category           VendorFormCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  key                String              @unique
+  label              String
+  fieldType          String
+  placeholder        String?
+  helpText           String?
+  defaultValue       Json?
+  options            Json?
+  validation         Json?
+  uiHints            Json?
+  required           Boolean             @default(false)
+  visibleToVendor    Boolean             @default(true)
+  visibleToAdmin     Boolean             @default(true)
+  visibleToSuper     Boolean             @default(true)
+  editableByVendor   Boolean             @default(true)
+  requiresApproval   Boolean             @default(false)
+  searchable         Boolean             @default(false)
+  filterable         Boolean             @default(false)
+  maskData           Boolean             @default(false)
+  encryptionRequired Boolean             @default(false)
+  isActive           Boolean             @default(true)
+  displayOrder       Int                 @default(0)
+  metadata           Json?
+  dependencies       VendorFormDependency[] @relation("ConditionField")
+  affectedBy         VendorFormDependency[] @relation("TargetField")
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  @@map("vendor_form_fields")
+}
+
+model VendorFormDependency {
+  id               String           @id @default(cuid())
+  conditionFieldId String
+  conditionField   VendorFormField  @relation("ConditionField", fields: [conditionFieldId], references: [id], onDelete: Cascade)
+  operator         String
+  conditionValue   Json
+  action           String
+  targetFieldId    String
+  targetField      VendorFormField  @relation("TargetField", fields: [targetFieldId], references: [id], onDelete: Cascade)
+  metadata         Json?
+  createdAt        DateTime         @default(now())
+  @@map("vendor_form_dependencies")
+}
+
+model VendorFormVersion {
+  id            String           @id @default(cuid())
+  versionNumber String
+  status        VendorFormStatus @default(DRAFT)
+  snapshot      Json
+  changeSummary String?
+  publishedAt   DateTime?
+  publishedBy   String?
+  archivedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  @@map("vendor_form_versions")
+}
+
+model VendorFieldValue {
+  id             String   @id @default(cuid())
+  vendorId       String
+  fieldKey       String
+  fieldValue     Json
+  approvalStatus String   @default("PENDING")
+  formVersionId  String?
+  updatedBy      String?
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  @@unique([vendorId, fieldKey])
+  @@index([vendorId])
+  @@map("vendor_field_values")
+}
+
+model FeedbackEntry {
+  id          String           @id @default(cuid())
+  kind        FeedbackKind
+  category    FeedbackCategory
+  status      FeedbackStatus   @default(OPEN)
+  title       String
+  body        String           @db.Text
+  rating      Int?
+  authorId    String
+  author      User             @relation(fields: [authorId], references: [id])
+  vendorId    String?
+  vendor      Vendor?          @relation(fields: [vendorId], references: [id])
+  couponId    String?
+  evidence    Json
+  metadata    Json?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  resolvedAt  DateTime?
+  resolvedBy  String?
+
+  @@index([authorId])
+  @@index([vendorId])
+  @@index([kind])
+  @@index([category])
+  @@index([status])
+  @@index([createdAt])
+  @@map("feedback_entries")
+}
+
+// ──────────────────────────────────────
+// Vendor "Today's Operation" dashboard
+// ──────────────────────────────────────
+
+model VendorStaffDeployment {
+  id               String   @id @default(cuid())
+  vendorId         String
+  date             DateTime @db.Date
+  count            Int
+  shift            String   // "MORNING" | "AFTERNOON" | "EVENING"
+  supervisorName   String?
+  attendanceStatus String   @default("PRESENT") // PRESENT | PARTIAL | MISSING
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+
+  @@unique([vendorId, date, shift])
+  @@map("vendor_staff_deployment")
+}
+
+model VendorHygieneChecklist {
+  id        String   @id @default(cuid())
+  vendorId  String
+  date      DateTime @db.Date
+  items     Json     // [{ key: string, label: string, done: boolean }]
+  completed Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([vendorId, date])
+  @@map("vendor_hygiene_checklist")
+}
+
+model VendorFoodStock {
+  id        String   @id @default(cuid())
+  vendorId  String
+  date      DateTime @db.Date
+  status    String   @default("SUFFICIENT") // SUFFICIENT | LOW | EMPTY
+  notes     String?
+  updatedAt DateTime @updatedAt
+
+  @@unique([vendorId, date])
+  @@map("vendor_food_stock")
+}

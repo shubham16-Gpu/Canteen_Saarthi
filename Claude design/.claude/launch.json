@@ -1,0 +1,53 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/api", "dev"],
+      "port": 4000
+    },
+    {
+      "name": "worker",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/worker", "dev"],
+      "port": 4001
+    },
+    {
+      "name": "web-superadmin",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/web", "exec", "next", "dev", "--turbo", "-p", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "web-admin",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/web", "exec", "next", "dev", "--turbo", "-p", "3001"],
+      "port": 3001
+    },
+    {
+      "name": "web-employee",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/web", "exec", "next", "dev", "--turbo", "-p", "3002"],
+      "port": 3002
+    },
+    {
+      "name": "web-vendor",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/web", "exec", "next", "dev", "--turbo", "-p", "3003"],
+      "port": 3003
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/web", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "mobile",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@canteen/mobile", "start"],
+      "port": 8081
+    }
+  ]
+}

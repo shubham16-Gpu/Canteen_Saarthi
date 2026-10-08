@@ -1,0 +1,6 @@
+{
+  "name": "Enterprise RBAC Login",
+  "description": "Multi-role login system with layered security (Google Authenticator, OTP, Google SSO) for Admin, Super Admin, Employee, and Vendors.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

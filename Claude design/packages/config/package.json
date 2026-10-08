@@ -1,0 +1,14 @@
+{
+  "name": "@canteen/config",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/nestjs": "./eslint/nestjs.js",
+    "./eslint/nextjs": "./eslint/nextjs.js",
+    "./eslint/react-native": "./eslint/react-native.js",
+    "./typescript/base": "./typescript/base.json",
+    "./prettier": "./prettier/index.js",
+    "./tailwind": "./tailwind/base.ts"
+  }
+}
